@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './TextButton.less';
+import '../styles/TextButton.less';
 
 interface Props {
   text: string,
