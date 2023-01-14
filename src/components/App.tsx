@@ -12,12 +12,32 @@ interface State {
 
 export default class App extends React.Component<Props, State> {
   cities = ['Ottawa', 'Moscow', 'Tokyo'];
+  weatherData = [];
 
   constructor(props: Props) {
     super(props);
     this.state = {
       city: this.cities[0]
     }
+
+    this.fetchWeatherData();
+  }
+
+  fetchWeatherData = (): void => {
+    const apiKey = "";
+    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${this.state.city}&appid=${apiKey}`;
+
+    fetch(apiUrl)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.list?.length > 0) this.weatherData = data.list;
+        else alert(`No weather found for "${this.state.city}"`);
+      });
+  }
+
+  changeCity = (city: string): void => {
+    this.setState({ city: city });
+    this.fetchWeatherData()
   }
 
   render() {
@@ -29,7 +49,7 @@ export default class App extends React.Component<Props, State> {
               <TextButton
                 className='text-uppercase'
                 text={city}
-                onClick={() => this.setState({ city: city })}
+                onClick={() => this.changeCity(city)}
                 active={this.state.city == city} />
             </div>
           ))}
