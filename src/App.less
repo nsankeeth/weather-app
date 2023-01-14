@@ -1,1 +1,30 @@
-.App {}
+.App {
+    text-align: center;
+
+    .button-container {
+        text-align: center;
+        flex: 1 0;
+    }
+
+    .weather-container {
+        border: 2px solid white;
+
+        .current-day {
+            margin-bottom: 2px;
+        }
+
+        .other-days {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 2px;
+
+            &>div {
+                text-align: center;
+            }
+
+            @media only screen and (max-width: 768px) {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    }
+}
