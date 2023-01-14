@@ -1,6 +1,19 @@
 .App {
     text-align: center;
 
+    &.main-container {
+        width: 50%;
+        margin: auto;
+
+        @media only screen and (max-width: 1320px) {
+            width: 75%;
+        }
+
+        @media only screen and (max-width: 768px) {
+            width: 100%;
+        }
+    }
+
     .button-container {
         text-align: center;
         flex: 1 0;
