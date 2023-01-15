@@ -57,7 +57,7 @@ export default class App extends React.Component<Props, State> {
   getWeatherIcon = (weatherCondition: string) => this.iconMapping[weatherCondition.toLowerCase()] || this.iconMapping.clear;
   kelvinToCelsius = (k: number) => (k - 273.15).toFixed(0);
 
-  getCurrentDay = () => new Date(this.getCurrentWeatherData().dt_txt)
+  getCurrentDay = () => new Date(this.getCurrentWeatherData().dt_txt.replace(/-/g, "/"));
 
   getNextDate = (number: number) => {
     var nextDay = this.getCurrentDay();
@@ -74,7 +74,7 @@ export default class App extends React.Component<Props, State> {
 
   getNextDayWeather = (date: Date) => {
     return this.state.weatherData.find(data => {
-      var weatherDate = new Date(data.dt_txt);
+      var weatherDate = new Date(data.dt_txt.replace(/-/g, "/"));
       return weatherDate.toDateString() === date.toDateString();
     });
   }
