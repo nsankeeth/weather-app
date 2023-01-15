@@ -25,8 +25,7 @@ export default class App extends React.Component<Props, State> {
   }
 
   fetchWeatherData = (): void => {
-    const apiKey = "";
-    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${this.state.city}&appid=${apiKey}`;
+    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${this.state.city}&appid=${process.env.REACT_APP_OPENWEATHERMAP_API_KEY}`;
 
     fetch(apiUrl)
       .then((res) => res.json())
