@@ -12,7 +12,9 @@ interface State {
 }
 
 export default class App extends React.Component<Props, State> {
+  weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   cities = ['Ottawa', 'Moscow', 'Tokyo'];
+  otherDayCount = 4;
 
   constructor(props: Props) {
     super(props);
@@ -41,8 +43,30 @@ export default class App extends React.Component<Props, State> {
   }
 
   getCurrentWeatherData = () => this.state.weatherData[0];
-  getWeatherIconURL = (): string => `http://openweathermap.org/img/wn/${this.state.weatherData[0].weather[0]?.icon}@2x.png`;
+  getWeatherIconURL = (iconName: string): string => `http://openweathermap.org/img/wn/${iconName}@2x.png`;
   kelvinToCelsius = (k: number) => (k - 273.15).toFixed(0);
+
+  getCurrentDay = () => new Date(this.getCurrentWeatherData().dt_txt)
+
+  getNextDate = (number: number) => {
+    var nextDay = this.getCurrentDay();
+    nextDay.setDate(nextDay.getDate() + number);
+
+    return nextDay;
+  }
+
+  getNextDayByNumber = (number: number) => {
+    var nextDay = this.getNextDate(number);
+
+    return this.weekdays[nextDay.getDay()];
+  }
+
+  getNextDayWeather = (date: Date) => {
+    return this.state.weatherData.find(data => {
+      var weatherDate = new Date(data.dt_txt);
+      return weatherDate.toDateString() === date.toDateString();
+    });
+  }
 
   componentDidMount() {
     this.fetchWeatherData();
@@ -53,7 +77,7 @@ export default class App extends React.Component<Props, State> {
       <div className="App main-container p-3">
         <div className='d-flex justify-content-around pt-3 pb-3'>
           {this.cities.map((city, index) => (
-            <div className='button-container' key={index}>
+            <div className='button-container' key={`city-${index}`}>
               <TextButton
                 className='text-uppercase'
                 text={city}
@@ -72,12 +96,12 @@ export default class App extends React.Component<Props, State> {
                 <div className='w-50 float-start text-end'>
                   <img
                     className='h-100 w-auto'
-                    src={this.getWeatherIconURL()}
+                    src={this.getWeatherIconURL(this.getCurrentWeatherData().weather[0].icon)}
                     alt="weather status icon"
                   />
                 </div>
                 <div className='w-50 float-end text-start'>
-                  <h1 className='fw-bold display-5'>{this.kelvinToCelsius(this.getCurrentWeatherData().main.temp)} &deg;</h1>
+                  <h1 className='fw-bold display-5'>{this.kelvinToCelsius(this.getCurrentWeatherData().main.temp)}&deg;</h1>
                   <div className='fs-3 fw-lighter'>{this.getCurrentWeatherData().weather[0].main}</div>
                 </div>
               </div>
@@ -85,7 +109,19 @@ export default class App extends React.Component<Props, State> {
           </div>
           <div className="container-fluid p-0">
             <div className="other-days">
-              <div></div>
+              {[...Array(this.otherDayCount)].map((number, index) => (
+                <div key={`other-day-${index + 1}`} className='pt-3 pb-3'>
+                  <div className='fs-4 fw-lighter'>{this.getNextDayByNumber(index + 1)}</div>
+                  <div>
+                    <img
+                      className='h-100 w-auto'
+                      src={this.getWeatherIconURL(this.getNextDayWeather(this.getNextDate(index + 1)).weather[0].icon)}
+                      alt="weather status icon"
+                    />
+                  </div>
+                  <h4 className='fw-bold'>{this.kelvinToCelsius(this.getNextDayWeather(this.getNextDate(index + 1)).main.temp)}&deg;</h4>
+                </div>
+              ))}
             </div>
           </div>
         </div>
