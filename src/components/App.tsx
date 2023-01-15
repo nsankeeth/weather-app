@@ -2,6 +2,12 @@ import React from 'react';
 import '../styles/App.less';
 
 import TextButton from './TextButton'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { faSnowflake } from '@fortawesome/free-solid-svg-icons';
+import { faCloud } from '@fortawesome/free-solid-svg-icons';
+import { faCloudSun } from '@fortawesome/free-solid-svg-icons';
+import { faCloudShowersHeavy } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
 }
@@ -15,6 +21,12 @@ export default class App extends React.Component<Props, State> {
   weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   cities = ['Ottawa', 'Moscow', 'Tokyo'];
   otherDayCount = 4;
+  iconMapping: { [key: string]: any } = {
+    clear: faCloudSun,
+    clouds: faCloud,
+    snow: faSnowflake,
+    rain: faCloudShowersHeavy
+  }
 
   constructor(props: Props) {
     super(props);
@@ -42,7 +54,7 @@ export default class App extends React.Component<Props, State> {
   }
 
   getCurrentWeatherData = () => this.state.weatherData[0];
-  getWeatherIconURL = (iconName: string): string => `http://openweathermap.org/img/wn/${iconName}@2x.png`;
+  getWeatherIcon = (weatherCondition: string) => this.iconMapping[weatherCondition.toLowerCase()] || this.iconMapping.clear;
   kelvinToCelsius = (k: number) => (k - 273.15).toFixed(0);
 
   getCurrentDay = () => new Date(this.getCurrentWeatherData().dt_txt)
@@ -93,13 +105,12 @@ export default class App extends React.Component<Props, State> {
               <div className='fs-3 fw-lighter'>Today</div>
               <div className='w-50 p-3 m-auto d-flex'>
                 <div className='w-50 float-start text-end'>
-                  <img
-                    className='w-100 h-auto'
-                    src={this.getWeatherIconURL(this.getCurrentWeatherData().weather[0].icon)}
-                    alt="weather status icon"
-                  />
+                  <FontAwesomeIcon
+                    icon={this.getWeatherIcon(this.getCurrentWeatherData().weather[0].main)}
+                    size="10x"
+                    className='w-auto h-100 main-icon-color mw-100 mh-120px' />
                 </div>
-                <div className='w-50 float-end text-start'>
+                <div className='w-50 float-end text-start d-flex flex-column px-2 justify-content-center'>
                   <h1 className='fw-bold display-5'>{this.kelvinToCelsius(this.getCurrentWeatherData().main.temp)}&deg;</h1>
                   <div className='fs-3 fw-lighter'>{this.getCurrentWeatherData().weather[0].main}</div>
                 </div>
@@ -112,11 +123,10 @@ export default class App extends React.Component<Props, State> {
                 <div key={`other-day-${index + 1}`} className='pt-3 pb-3'>
                   <div className='fs-4 fw-lighter'>{this.getNextDayByNumber(index + 1)}</div>
                   <div>
-                    <img
-                      className='w-100 h-auto'
-                      src={this.getWeatherIconURL(this.getNextDayWeather(this.getNextDate(index + 1)).weather[0].icon)}
-                      alt="weather status icon"
-                    />
+                    <FontAwesomeIcon
+                      icon={this.getWeatherIcon(this.getNextDayWeather(this.getNextDate(index + 1)).weather[0].main)}
+                      size="4x"
+                      className='py-2 main-icon-color' />
                   </div>
                   <h4 className='fw-bold'>{this.kelvinToCelsius(this.getNextDayWeather(this.getNextDate(index + 1)).main.temp)}&deg;</h4>
                 </div>
