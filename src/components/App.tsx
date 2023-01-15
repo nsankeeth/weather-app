@@ -94,7 +94,7 @@ export default class App extends React.Component<Props, State> {
               <div className='w-50 p-3 m-auto d-flex'>
                 <div className='w-50 float-start text-end'>
                   <img
-                    className='h-100 w-auto'
+                    className='w-100 h-auto'
                     src={this.getWeatherIconURL(this.getCurrentWeatherData().weather[0].icon)}
                     alt="weather status icon"
                   />
@@ -113,7 +113,7 @@ export default class App extends React.Component<Props, State> {
                   <div className='fs-4 fw-lighter'>{this.getNextDayByNumber(index + 1)}</div>
                   <div>
                     <img
-                      className='h-100 w-auto'
+                      className='w-100 h-auto'
                       src={this.getWeatherIconURL(this.getNextDayWeather(this.getNextDate(index + 1)).weather[0].icon)}
                       alt="weather status icon"
                     />
